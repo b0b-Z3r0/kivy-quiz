@@ -10,20 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Clean Checkout (with full history)
+      - name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Install Docker
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y docker.io
+          sudo apt-get install -y build-essential ccache git zip unzip openjdk-17-jdk python3-pip
+          pip install --user buildozer cython
 
-      - name: Build APK using Docker
+      - name: Build APK
         run: |
-          docker run --rm \
-            -v ${{ github.workspace }}:/home/user/host \
-            -w /home/user/host \
-            kivy/buildozer \
-            buildozer android debug
+          buildozer android debug
