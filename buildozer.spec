@@ -119,10 +119,10 @@ fullscreen = 1
 #android.private_storage = True
 
 # (str) Android NDK directory (if empty, it will be automatically downloaded.)
-android.ndk_path = /home/runner/.buildozer/android/platform/android-ndk-r25b
+android.ndk_path = /usr/local/lib/android/sdk/ndk/28.1.13356709
 
 # (str) Android SDK directory (if empty, it will be automatically downloaded.)
-android.sdk_path = /home/runner/.buildozer/android/platform/android-sdk
+android.sdk_path = /usr/local/lib/android/sdk
 
 # (str) ANT directory (if empty, it will be automatically downloaded.)
 #android.ant_path =
