@@ -10,29 +10,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      - name: Install Buildozer and Dependencies
+      - name: Install dependencies
         run: |
           sudo apt update
           sudo apt install -y zip unzip openjdk-17-jdk python3-pip
           pip install --upgrade pip
-          pip install buildozer cython
+          pip install cython buildozer
 
-      - name: Create SDK Licenses
+      - name: Accept Android SDK Licenses
         run: |
           mkdir -p ~/.buildozer/android/platform/android-sdk/licenses
-          echo "8933bad161af4178b1185d1a37fbf41ea5269c55" >> ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
+          echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
           echo "84831b9409646a918e30573bab4c9c91346d8abd" >> ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
 
-      - name: Build APK
+      - name: Force Buildozer to use correct home
         run: |
+          export HOME=/home/runner
           buildozer android debug
