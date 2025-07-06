@@ -28,10 +28,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install --user buildozer cython
 
-      - name: Install cmdline-tools (sdkmanager)
+      - name: Install Android cmdline-tools
         run: |
-          mkdir -p $HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest
-          cd $HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest
+          export ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
+          mkdir -p $ANDROID_HOME/cmdline-tools/latest
+          cd $ANDROID_HOME/cmdline-tools/latest
           curl -o sdk-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
           unzip sdk-tools.zip
           rm sdk-tools.zip
@@ -44,4 +45,6 @@ jobs:
       - name: Build APK
         run: |
           export PATH=$HOME/.local/bin:$PATH
+          export ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
+          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
           buildozer android debug
