@@ -1,0 +1,29 @@
+name: Build Kivy Android APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build APK
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Run Buildozer in Docker
+        uses: addnab/docker-run-action@v3
+        with:
+          image: kivy/buildozer
+          options: -v ${{ github.workspace }}:/home/user/host -w /home/user/host
+          run: |
+            pip install --upgrade pip setuptools
+            buildozer android debug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: kivy-quiz-apk
+          path: bin/*.apk
