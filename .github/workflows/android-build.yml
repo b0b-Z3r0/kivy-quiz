@@ -20,11 +20,11 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install cython
 
       - name: Build APK using Docker
         run: |
-         docker run --rm -v ${{ github.workspace }}:/home/user/host -w /home/user/host kivy/buildozer buildozer android debug
+          sudo docker run --rm -v $GITHUB_WORKSPACE:/home/user/host -w /home/user/host kivy/buildozer buildozer android debug
