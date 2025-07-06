@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build:
@@ -24,7 +25,13 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential ccache git zip unzip openjdk-17-jdk python3-pip
+          python -m pip install --upgrade pip
           pip install --user buildozer cython
+
+      - name: Accept Android SDK licenses
+        run: |
+          mkdir -p $HOME/.buildozer/android/platform/android-sdk/licenses
+          echo -e "8933bad161af4178b1185d1a37fbf41ea5269c55\n84831b9409646a918e30573bab4c9c91346d8abd" > $HOME/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
 
       - name: Build APK
         run: |
