@@ -42,7 +42,6 @@ jobs:
           echo -e "8933bad161af4178b1185d1a37fbf41ea5269c55\n84831b9409646a918e30573bab4c9c91346d8abd" > $HOME/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
 
       - name: Build APK
-        env:
-          PATH: $HOME/.local/bin:$PATH
         run: |
+          export PATH=$HOME/.local/bin:$PATH
           buildozer android debug
