@@ -9,29 +9,39 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      ANDROID_HOME: /usr/local/lib/android/sdk
+      ANDROID_NDK_HOME: /usr/local/lib/android/sdk/ndk/28.1.13356709
+      SDKMANAGER_PATH: /usr/local/lib/android/sdk/cmdline-tools/latest/bin
+
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
       - name: Install dependencies
         run: |
-          sudo apt update
-          sudo apt install -y zip unzip openjdk-17-jdk python3-pip
-          pip install --upgrade pip
-          pip install cython buildozer
+          python -m pip install --upgrade pip
+          pip install --user buildozer cython
 
-      - name: Accept Android SDK Licenses
+      - name: Fix sdkmanager path
         run: |
-          mkdir -p ~/.buildozer/android/platform/android-sdk/licenses
-          echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
-          echo "84831b9409646a918e30573bab4c9c91346d8abd" >> ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
+          mkdir -p $ANDROID_HOME/tools/bin
+          ln -sf $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager $ANDROID_HOME/tools/bin/sdkmanager
 
-      - name: Force Buildozer to use correct home
+      - name: Export HOME (fix permissions)
+        run: echo "HOME=/home/runner" >> $GITHUB_ENV
+
+      - name: Initialize buildozer (first run will install components)
         run: |
-          export HOME=/home/runner
           buildozer android debug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: kivy-quiz-apk
+          path: bin/*.apk
