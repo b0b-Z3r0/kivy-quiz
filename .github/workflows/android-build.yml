@@ -15,22 +15,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: Install dependencies
+      - name: Build APK with Docker
         run: |
-          python -m pip install --upgrade pip
-          pip install buildozer cython
-
-      - name: Install build essentials
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential ccache git zip unzip openjdk-17-jdk python3-pip
-
-      - name: Build APK
-        run: |
-          pip install --user buildozer
-          buildozer android debug
+          sudo docker run --rm \
+            -v ${{ github.workspace }}:/home/user/host \
+            -w /home/user/host \
+            kivy/buildozer \
+            buildozer android debug
